@@ -5,6 +5,7 @@
 
 {% block content %}
     <div class="container fade-in">
+    
         <div class="container-fluid">
             
                 <img src="https://img.freepik.com/free-vector/gradient-stock-market-concept_23-2149166910.jpg?w=2000" alt="Full-width image" class="full-width-image">
@@ -23,13 +24,155 @@
         <br>
         <br>
         <br>
-        <br>
-        <br>
 
         <div class="container">
             <h1>Welcome to Stock Practice Hub</h1>
             <p>Practice trading stocks and improve your skills using fake money</p>
-            <a href="#" class="btn btn-primary btn-lg">Get Started</a>
+            <a href="{{ url_for('register_page') }}" class="btn btn-primary btn-lg">Sign Up</a>
+        
+            <br>
+            <br>
+            <br>
+        
+            <div class="column">
+                <img src="{{ url_for('static', filename='currApple.png') }}" alt="Graph" style="width:90%">
+            </div>
+
+            <br>
+            <br>
+            <br>
+
+            <div class="column">
+                <img src="{{ url_for('static', filename='currApple.png') }}" alt="Graph" style="width:90%">
+            </div>
+
+            <br>
+            <br>
+            <br>
+
+            <div class="column">
+                <img src="{{ url_for('static', filename='currApple.png') }}" alt="Graph" style="width:90%">
+            </div>
+            
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        
+        <section id="testimonials">
+            <div class="testimonial-heading">
+                <span>Comments</span>
+                <h1>Client Says</h1>
+            </div>
+
+            <div class="testimonial-box-container">
+                <div class="testimonial-box">
+                    <div class="box-top">
+                        <div class="profile">
+                            <div class="name-user">
+                                <strong>Alex Treyford</strong>
+                                <span>@Alex-Treyford</span>
+                            </div>
+                        </div>
+                        <div class="reviews">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+
+                    <div class="client-comment">
+                        <p>This website was awesome. I loved how I was able to become a professional stock broker using fake Money. Totally recommend.</p>
+                    </div>
+
+                </div>
+
+                <div class="testimonial-box">
+                    <div class="box-top">
+                        <div class="profile">
+                            <div class="name-user">
+                                <strong>Alex Treyford</strong>
+                                <span>@Alex-Treyford</span>
+                            </div>
+                        </div>
+                        <div class="reviews">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+
+                    <div class="client-comment">
+                        <p>This website was awesome. I loved how I was able to become a professional stock broker using fake Money. Totally recommend.</p>
+                    </div>
+
+                </div>
+
+                <div class="testimonial-box">
+                    <div class="box-top">
+                        <div class="profile">
+                            <div class="name-user">
+                                <strong>Alex Treyford</strong>
+                                <span>@Alex-Treyford</span>
+                            </div>
+                        </div>
+                        <div class="reviews">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+
+                    <div class="client-comment">
+                        <p>This website was awesome. I loved how I was able to become a professional stock broker using fake Money. Totally recommend.</p>
+                    </div>
+
+                </div>
+
+                <div class="testimonial-box">
+                    <div class="box-top">
+                        <div class="profile">
+                            <div class="name-user">
+                                <strong>Alex Treyford</strong>
+                                <span>@Alex-Treyford</span>
+                            </div>
+                        </div>
+                        <div class="reviews">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+
+                    <div class="client-comment">
+                        <p>This website was awesome. I loved how I was able to become a professional stock broker using fake Money. Totally recommend.</p>
+                    </div>
+
+                </div>
+            </div>
+
+
+
+        </section>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+      
+        
+        <div class="black-section">
         </div>
 
     </div>
@@ -39,4 +182,73 @@
           document.querySelector(".fade-in").classList.add("fade-in");
         });
     </script>
+    <style>
+        .testimonial-heading span{
+            font-size: 1.3rem;
+            color: #252525;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .testimonial-box-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+
+        .testimonial-box{
+            width: 500px;
+            box-shadow: 2px 2px 30px rgba(0,0,0,0.1);
+            background-color: #152238;
+            padding: 20px;
+            margin: 15px;
+            cursor: pointer;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .name-user{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-user strong{
+            color: #ffffff;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .name-user span{
+            color: 979797;
+            font-size: 0.8rem;
+        }
+
+        .reviews{
+            color: #ffffff;
+        }
+
+        .box-top{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .client-comment p{
+            font-size: 0.9rem;
+            color: #ffffff
+        }
+
+        .testimonial-box:hover{
+            transform: translateY(-10px);
+            transition: all ease 0.3s;
+        }
+
+    </style>
 {% endblock %}
