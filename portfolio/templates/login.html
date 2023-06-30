@@ -8,14 +8,14 @@
         
         <body class="text-center">
             <div class="container">
-                <form method="POST" class="form-register" style="color:white">
+                <form method="POST" class="form-signin" style="color:white">
                     {{ form.hidden_tag() }}
                     <img class="mb-4" src="{{ url_for('static', filename='Logo.png') }}" alt="" style="width: 500px; height: auto;">
                     <h1 class="h3 mb-3 font-weight-normal"  style="color: #152238;">
-                        Create your Account
+                        Login
                     </h1>
                     <p style="color: #152238;">
-                        Create an account to keep track of your portfolio
+                        Login to an already existing account
                     </p>
 
                     <br>
@@ -28,28 +28,18 @@
                     <br>
 
                     <div style="color: #152238;">
-                        {{ form.email_address.label() }}
+                        {{ form.password.label() }}
                     </div>
-                    {{ form.email_address(class="form-control", placeholder="Email Address") }}
+                    {{ form.password(class="form-control", placeholder="Password") }}
 
-                    <br>
-
-                    <div style="color: #152238;">
-                        {{ form.password1.label() }}
-                    </div>
-                    {{ form.password1(class="form-control", placeholder="Password") }}
-
-                    <br>
-
-                    <div style="color: #152238;">
-                        {{ form.password2.label() }}
+                    <div class="checkbox mb-3">
+                        <h6>Do not have an account?</h6>
+                        <a class="btn btn-sm btn-secondary" href="{{ url_for('register_page') }}">Register</a>
                     </div>
 
-                    {{ form.password2(class="form-control", placeholder="Confirm Password") }}
-        
                     <br>
         
-                    {{ form.submit(class="btn btn-lg btn-block btn-primary") }}
+                    {{form.submit(class="btn btn-lg btn-block btn-primary") }}
         
                 </form>
             </div>

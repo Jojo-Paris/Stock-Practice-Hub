@@ -1,6 +1,11 @@
-from portfolio import db
+from portfolio import db, login_manager
 from portfolio import bcrypt
 from flask_login import UserMixin
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
 
 class User(db.Model, UserMixin):
     id = db.Column(db.Integer(), primary_key=True)
@@ -29,4 +34,3 @@ class StocksPortfolio(db.Model):
     current_price = db.Column(db.Numeric(10,2), nullable=False)
     value = db.Column(db.Numeric(10,2), nullable=False)
     owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
-
