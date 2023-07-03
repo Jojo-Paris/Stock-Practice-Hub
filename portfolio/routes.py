@@ -1,5 +1,5 @@
 from portfolio import app
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for, flash, request
 from portfolio.models import StocksPortfolio, User
 from portfolio.forms import RegisterForm, LoginForm
 from portfolio import db
@@ -8,8 +8,12 @@ import yfinance as yf
 import matplotlib.pyplot as plt
 import matplotlib
 import seaborn as sns; sns.set()
+import numpy as np
+import pandas as pd
 matplotlib.use("agg")
 import os
+import plotly.graph_objs as go
+
 
 @app.route("/")
 @app.route("/home")
@@ -33,7 +37,7 @@ def register_page():
 
         login_user(user_to_create)
         flash(f"Account created successfully! You are now logged in as {user_to_create.username}", category='success')
-        return redirect(url_for('home_page'))
+        return redirect(url_for('logged_in_page'))
     if form.errors != {}:
         for err_msg in form.errors.values():
             flash(f'There was an error with creating a user: {err_msg}', category='danger')
@@ -50,31 +54,71 @@ def login_page():
         ):
             login_user(attempted_user)
             flash(f'Success! You are logged in as: {attempted_user.username}', category='success')
-            return redirect(url_for('home_page'))
+            return redirect(url_for('logged_in_page'))
         else:
             flash('Username and password are not match! Please try again', category='danger')
 
     return render_template('login.html', form=form)
 
-def get_closing_prices(symbol, period):
-    ticker = yf.Ticker(symbol)
-    data = ticker.history(period)
-    return data["Close"]
+@app.route('/logout')
+def logout_page():
+    logout_user()
+    flash("You have been logged out!", category='info')
+    return redirect(url_for("home_page"))
+
+@app.route('/logged-in-home')
+def logged_in_page():
+    return render_template('logged_in.html')
+
+def get_closing_prices(symbol, periodIn, intervalIn):
+
+    return yf.download(tickers=f'{symbol}', period=f'{periodIn}', interval=f'{intervalIn}')
+
+
 
 def createPicture(tickerList):
-    period = "5y"
+
+    period = '1d'
+    interval = '1m'
     for ticker in tickerList:
-        prices_data = get_closing_prices(ticker, period)
+        fig = fig = go.Figure()
+        prices_data = get_closing_prices(ticker, period, interval)
 
-        sns.set_theme(style="darkgrid")
-        plt.figure(figsize=(10, 6))
+        fig.add_trace(go.Candlestick(x=prices_data.index,
+                open=prices_data['Open'],
+                high=prices_data['High'],
+                low=prices_data['Low'],
+                close=prices_data['Close'], name = 'market data'))
+        
+        company_name = yf.Ticker(ticker)
+        company_name = company_name.info['longName']
 
-        sns.lineplot(data=prices_data, linewidth=2, color="blue")
-        plt.xticks(rotation=30)
-        plt.title(f"Closing Stock Prices for {ticker}")
-        plt.xlabel("Date")
-        plt.ylabel("Price")
+        fig.update_layout(
+        title=f'{company_name} live share price evolution',
+        yaxis_title='Stock Price (USD per Shares)')
 
+        
+        
+        fig.update_xaxes(
+        rangeslider_visible=True,
+        rangeselector=dict(
+            buttons=list([
+                dict(count=15, label="15m", step="minute", stepmode="backward"),
+                dict(count=45, label="45m", step="minute", stepmode="backward"),
+                dict(count=1, label="HTD", step="hour", stepmode="todate"),
+                dict(count=3, label="3h", step="hour", stepmode="backward"),
+                dict(step="all")
+                ])
+            )
+        )
+        
         dir_path = os.path.dirname(os.path.realpath(__file__))
+        if not os.path.exists(f'{dir_path}/static'):
+            os.mkdir("static")
+        
         file_path = os.path.join(dir_path, f'static/{ticker}.png')
-        plt.savefig(file_path)
+        fig.write_image(file_path)
+
+
+
+    

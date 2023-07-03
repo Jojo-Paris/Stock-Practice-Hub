@@ -17,11 +17,28 @@
   <body>
     
     <nav class="navbar navbar-expand-lg navbar-dark bg-custom fixed-top">
+
       <a class="navbar-brand" href="{{ url_for('home_page') }}">Stock Practice Hub</a>
+
       <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
       </button>
+
       <div class="collapse navbar-collapse" id="navbarNav">
+        {% if current_user.is_authenticated %}
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logged_in_page') }}">Welcome, {{ current_user.username }}</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="#">FAQs</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="{{ url_for('logout_page') }}" onclick="return confirmLogout()">Log Out</a>
+          </li>
+        </ul>
+
+        {% else %}
         <ul class="navbar-nav ml-auto">
           <li class="nav-item">
             <a class="nav-link" href="#">FAQs</a>
@@ -30,6 +47,7 @@
             <a class="nav-link" href="{{ url_for('login_page') }}">Log In</a>
           </li>
         </ul>
+        {% endif %}
       </div>
     </nav>
 
@@ -145,4 +163,9 @@
         }
 
   </style>
+  <script>
+        function confirmLogout() {
+            return confirm("Are you sure you want to log out?");
+        };
+  </script>
 </html>

@@ -27,7 +27,11 @@
         <div class="container">
             <h1>Welcome to Stock Practice Hub</h1>
             <p>Practice trading stocks and improve your skills using fake money</p>
+            {% if current_user.is_authenticated %}
+            <h4 style="color: #152238 ;">You are already logged in ... Click the welcome tab at the top to start!</h4>
+            {% else %}
             <a href="{{ url_for('register_page') }}" class="btn btn-primary btn-lg">Sign Up</a>
+            {% endif %}
         
             <br>
             <br>
@@ -237,10 +241,10 @@
 
         .horizontal-line {
             position: absolute;
-            top: 19.5%;
+            top: 17.7%;
             left: 0;
             right: 0;
-            border-top: 1px solid #152238;
+            border-top: 3px solid #152238;
         }
 
     </style>

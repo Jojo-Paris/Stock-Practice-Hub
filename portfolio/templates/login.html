@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% block title %}
-    Register for an Account
+    Login to your Account
 {% endblock %}
 
 {% block content %}
@@ -32,8 +32,10 @@
                     </div>
                     {{ form.password(class="form-control", placeholder="Password") }}
 
+                    <br>
+                    
                     <div class="checkbox mb-3">
-                        <h6>Do not have an account?</h6>
+                        <h6 style="color: #152238;">Do not have an account?</h6>
                         <a class="btn btn-sm btn-secondary" href="{{ url_for('register_page') }}">Register</a>
                     </div>
 

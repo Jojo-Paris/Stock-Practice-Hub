@@ -9,3 +9,5 @@ email_validator
 yfinance
 datetime
 seaborn
+plotly
+kaleido

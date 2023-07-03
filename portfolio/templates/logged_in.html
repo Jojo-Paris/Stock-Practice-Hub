@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block title %}
+    Stock Practice Hub
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+        
+    <p>Hello you are logged in user {{ current_user.username }}</p>
+    
+</div>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+          document.querySelector(".fade-in").classList.add("fade-in");
+        });
+        
+    </script>
+{% endblock %}
