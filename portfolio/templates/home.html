@@ -28,7 +28,7 @@
             <h1>Welcome to Stock Practice Hub</h1>
             <p>Practice trading stocks and improve your skills using fake money</p>
             {% if current_user.is_authenticated %}
-            <h4 style="color: #152238 ;">You are already logged in ... Click the welcome tab at the top to start!</h4>
+            <h4 style="color: #152238;">Click the welcome tab at the top to start!</h4>
             {% else %}
             <a href="{{ url_for('register_page') }}" class="btn btn-primary btn-lg">Sign Up</a>
             {% endif %}

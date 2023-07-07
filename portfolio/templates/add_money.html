@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}
+    Stock Practice Hub
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <body class="text-center">
+        <div class="container">
+            <form method="POST" style="color:white">
+                {{ form.hidden_tag() }}
+                <img class="mb-4" src="{{ url_for('static', filename='Logo.png') }}" alt="" style="width: 500px; height: auto;">
+                <h1 class="h3 mb-3 font-weight-normal"  style="color: #152238;">
+                    How much money would you like to add?
+                </h1>
+                <br>
+                <div style="color: #152238 ;">
+                    {{ form.amount.label() }}
+                </div>
+                {{ form.amount(class="form-control", placeholder="Amount") }}
+
+                <br>
+        
+                    {{form.submit(class="btn btn-lg btn-block btn-primary") }}
+            </form>
+        </div>
+    </body>
+
+</div>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+          document.querySelector(".fade-in").classList.add("fade-in");
+        });
+        
+    </script>
+{% endblock %}

@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, PasswordField, SubmitField
-from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError
+from wtforms import StringField, PasswordField, SubmitField, DecimalField
+from wtforms.validators import Length, EqualTo, Email, DataRequired, ValidationError, NumberRange
 from portfolio.models import User
 
 class RegisterForm(FlaskForm):
@@ -26,3 +26,7 @@ class LoginForm(FlaskForm):
     username = StringField(label='User Name:', validators=[DataRequired()])
     password = PasswordField(label='Password:', validators=[DataRequired()])
     submit = SubmitField(label='Sign in')
+
+class AddMoney(FlaskForm):
+    amount = DecimalField(label='Amount', validators=[DataRequired(), NumberRange(min=0.99, max=10000, message='Amount must be greater than 0')])
+    submit = SubmitField(label='Add money')

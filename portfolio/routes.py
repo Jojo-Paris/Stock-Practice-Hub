@@ -1,9 +1,9 @@
 from portfolio import app
 from flask import render_template, redirect, url_for, flash, request
 from portfolio.models import StocksPortfolio, User
-from portfolio.forms import RegisterForm, LoginForm
+from portfolio.forms import RegisterForm, LoginForm, AddMoney
 from portfolio import db
-from flask_login import login_user, logout_user, login_required
+from flask_login import login_user, logout_user, login_required, current_user
 import yfinance as yf
 import matplotlib.pyplot as plt
 import matplotlib
@@ -27,8 +27,6 @@ def register_page():
 
     form = RegisterForm()
     if form.validate_on_submit():
-        print('inside')
-
         user_to_create = User(username=form.username.data,
                                 email_address=form.email_address.data,
                                 password=form.password1.data)
@@ -70,11 +68,23 @@ def logout_page():
 def logged_in_page():
     return render_template('logged_in.html')
 
+@app.route('/add-money', methods=['GET', 'POST'])
+def add_money():
+    form = AddMoney()
+    if form.validate_on_submit():
+        current_user.budget += form.amount.data
+        db.session.commit()
+        
+        print(current_user.budget)
+        flash(f'Success! You are have added {form.amount.data}', category='success')
+        return redirect(url_for('logged_in_page'))
+    else:
+        flash('Amount not valid. Please try again.', category='danger')
+
+    return render_template('add_money.html', form=form)
+
 def get_closing_prices(symbol, periodIn, intervalIn):
-
     return yf.download(tickers=f'{symbol}', period=f'{periodIn}', interval=f'{intervalIn}')
-
-
 
 def createPicture(tickerList):
 
@@ -117,7 +127,12 @@ def createPicture(tickerList):
             os.mkdir("static")
         
         file_path = os.path.join(dir_path, f'static/{ticker}.png')
-        fig.write_image(file_path)
+
+        if os.path.exists(file_path):
+            continue
+        else:
+            fig.write_image(file_path)
+            
 
 
 
