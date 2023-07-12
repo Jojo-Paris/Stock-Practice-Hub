@@ -5,24 +5,28 @@
 
 {% block content %}
 <div class="container fade-in">
-    <h1>Welcome {{current_user.username}}.</h1>
-    {% if current_user.budget == 0.0 %}
-        <h2 style="color: #152238;">Your current balance is {{current_user.budget}}$</h2>
-        <h2 style="color: #152238;">Add more money or sell some of your current stocks</h2>
-        <a href="{{ url_for('add_money') }}" class="btn btn-primary btn-lg">Add Money!</a>
-    {% else %}
-        <h1>You currently have {{current_user.budget}}$</h1>
-        <h2 style="color: #152238;">Buy more stocks below</h2>
-        <a href="{{ url_for('home_page') }}" class="btn btn-primary btn-lg" >Buy Stocks!</a>
-    {% endif %}
+    <body class="text-center">
+        <div class="container">
+            <h1>Welcome {{current_user.username}}.</h1>
+            {% if current_user.budget == 0.0 %}
+                <h2 style="color: #152238;">Your current balance is {{current_user.budget}}$</h2>
+                <h2 style="color: #152238;">Add more money or sell some of your current stocks</h2>
+                <a href="{{ url_for('add_money') }}" class="btn btn-primary btn-lg">Add Money!</a>
+            {% else %}
+                <h1>You currently have {{current_user.budget}}$</h1>
+                <h2 style="color: #152238;">Buy more stocks below</h2>
+                <a href="{{ url_for('stocks_page') }}" class="btn btn-primary btn-lg" >Buy Stocks!</a>
+            {% endif %}
 
-    <br>
-    <br>
-    <br>
+            <br>
+            <br>
+            <br>
 
-    <h1>Current Stocks</h1>
-    <h2 style="color: #152238;">Stocks list will go here</h2>
-
+            <h1>Current Stocks</h1>
+            <h2 style="color: #152238;">Stocks list will go here</h2>
+        </div>
+    </body>
+    
 </div>
     <script>
         window.addEventListener("DOMContentLoaded", function() {

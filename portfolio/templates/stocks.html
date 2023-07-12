@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block title %}
+    Stock Practice Hub
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <body class="text-center">
+        <div class="container">
+            <h1>You currently have {{current_user.budget}}$</h1>
+            <h2 style="color: #152238;">Buy more stocks below</h2>
+            <br>
+            <br>
+            <br>
+
+            <h1>Stock Market</h1>
+
+            <ul>
+                {% for stock in stocks %}
+                        <li>
+                            <h3 style="color: #152238;">{{ stock.name }}</h3>
+                            <p style="color: #152238;">Symbol: {{ stock.symbol }}</p>
+                            <p style="color: #152238;">Price: {{ stock.price }}</p>
+                            <a href="{{ url_for('buy_stock', ticker=stock.symbol) }}">Buy Stock</a>
+                        </li>
+                {% endfor %}
+            </ul>
+
+            
+            
+            {% if current_page > 1 %}
+                <a href="{{ url_for('stocks_page', page=current_page-1) }}">Previous  </a>
+            {% endif %}
+
+            <a href="{{ url_for('stocks_page', page=current_page+1) }}">Next</a>
+        </div>
+    </body>
+</div>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+          document.querySelector(".fade-in").classList.add("fade-in");
+        });
+        
+    </script>
+{% endblock %}

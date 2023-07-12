@@ -1,7 +1,7 @@
 from portfolio import app
 from flask import render_template, redirect, url_for, flash, request
 from portfolio.models import StocksPortfolio, User
-from portfolio.forms import RegisterForm, LoginForm, AddMoney
+from portfolio.forms import RegisterForm, LoginForm, AddMoney, StockPurchase
 from portfolio import db
 from flask_login import login_user, logout_user, login_required, current_user
 import yfinance as yf
@@ -68,6 +68,40 @@ def logout_page():
 def logged_in_page():
     return render_template('logged_in.html')
 
+@app.route('/stocks')
+@app.route('/stocks/<int:page>')
+def stocks_page(page=1):
+    stocks_per_page = 10
+    start_index = (page - 1) * stocks_per_page
+    end_index = start_index + stocks_per_page
+    all_stocks = get_all_stocks(start_index, end_index)
+
+    return render_template('stocks.html', stocks=all_stocks, current_page=page)
+
+@app.route('/buy_stock/<ticker>', methods=['GET', 'POST'])
+def buy_stock(ticker):
+    form = StockPurchase()
+    form.ticker.data = ticker
+    stock_data = yf.Ticker(ticker)
+    singlePicture(ticker)
+    stock_price = stock_data.info.get('regularMarketPrice') or stock_data.info.get('previousClose') or stock_data.info.get('open') or 'N/A'
+    
+    if form.validate_on_submit():
+        quantity = form.quantity.data
+
+        total_cost = quantity * stock_price
+
+        if total_cost > current_user.budget:
+            flash('Insufficient funds for this stock purchase. Please try again.', 'error')
+            return redirect(url_for('stocks_page'))
+
+        # Perform the stock purchase and update the user's portfolio
+        # stock_purchase = StocksPortfolio(user_id=current_user.id, ticker=ticker, quantity=quantity)
+        flash('Stock purchased successfully!', 'success')
+        return redirect(url_for('logged_in_page'))
+        
+    return render_template('buy_stock.html', form=form, data=stock_data)
+
 @app.route('/add-money', methods=['GET', 'POST'])
 def add_money():
     form = AddMoney()
@@ -75,7 +109,6 @@ def add_money():
         current_user.budget += form.amount.data
         db.session.commit()
         
-        print(current_user.budget)
         flash(f'Success! You are have added {form.amount.data}', category='success')
         return redirect(url_for('logged_in_page'))
     else:
@@ -106,8 +139,6 @@ def createPicture(tickerList):
         fig.update_layout(
         title=f'{company_name} live share price evolution',
         yaxis_title='Stock Price (USD per Shares)')
-
-        
         
         fig.update_xaxes(
         rangeslider_visible=True,
@@ -133,6 +164,62 @@ def createPicture(tickerList):
         else:
             fig.write_image(file_path)
             
+def get_all_stocks(start, end):
+    with open('all_tickers.txt', 'r', encoding='utf-8') as f:
+        ticker_symbols = [line.strip() for line in f]
+        
+    selected_tickers = ticker_symbols[start:end]
+    
+    all_stocks = []
+    
+    for ticker in selected_tickers:
+        stock_data = yf.Ticker(ticker)
+        
+        stock_name = stock_data.info.get('longName', 'N/A')
+        stock_symbol = stock_data.info.get('symbol', 'N/A')
+        stock_price = stock_data.info.get('regularMarketPrice') or stock_data.info.get('previousClose') or stock_data.info.get('open') or 'N/A'
+
+        if stock_name == 'N/A' or stock_price =='N/A': continue 
+        
+        stock = {
+            'name': stock_name,
+            'symbol': stock_symbol,
+            'price': stock_price
+        }
+        
+        all_stocks.append(stock)
+    
+    return all_stocks
+
+def singlePicture(ticker):
+    period = '1d'
+    interval = '1m'
+    fig = fig = go.Figure()
+    prices_data = get_closing_prices(ticker, period, interval)
+
+    fig.add_trace(go.Candlestick(x=prices_data.index,
+            open=prices_data['Open'],
+            high=prices_data['High'],
+            low=prices_data['Low'],
+            close=prices_data['Close'], name = 'market data'))
+        
+    company_name = yf.Ticker(ticker)
+    company_name = company_name.info['longName']
+
+    fig.update_layout(
+    title=f'{company_name} live share price evolution',
+    yaxis_title='Stock Price (USD per Shares)')
+        
+    dir_path = os.path.dirname(os.path.realpath(__file__))
+    if not os.path.exists(f'{dir_path}/static'):
+        os.mkdir("static")
+        
+    file_path = os.path.join(dir_path, f'static/{ticker}.png')
+    
+    fig.write_image(file_path)
+
+    
+
 
 
 
