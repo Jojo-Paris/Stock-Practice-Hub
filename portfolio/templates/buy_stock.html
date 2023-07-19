@@ -26,7 +26,7 @@
                 <h1>Current Price: {{data.info.get('previousClose')}}$</h1>
             </div>
             
-            <form method="POST">
+            <form method="POST" onsubmit="return confirmPurchase({{ data.info.get('previousClose') }}, {{ current_user.budget }})">
                 {{ form.hidden_tag() }}
                 <div style="color: #152238;">
                     {{ form.quantity.label }}
@@ -42,6 +42,18 @@
         window.addEventListener("DOMContentLoaded", function() {
           document.querySelector(".fade-in").classList.add("fade-in");
         });
+
+        function confirmPurchase(stockPrice, userBudget) {
+        var quantity = parseInt(document.getElementById("quantity").value);
+        var totalCost = quantity * stockPrice;
+        var remainingBudget = userBudget - totalCost;
+
+        var confirmationMessage = "Are you sure you want to purchase " + quantity + " shares?\n\n";
+        confirmationMessage += "Total cost: $" + totalCost.toFixed(2) + "\n";
+        confirmationMessage += "Remaining budget: $" + remainingBudget.toFixed(2);
+
+        return confirm(confirmationMessage);
+        };
         
     </script>
 {% endblock %}

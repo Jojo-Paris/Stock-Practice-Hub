@@ -1,5 +1,6 @@
 from portfolio import app
-from flask import render_template, redirect, url_for, flash, request
+from decimal import Decimal
+from flask import render_template, redirect, url_for, flash, request, Blueprint
 from portfolio.models import StocksPortfolio, User
 from portfolio.forms import RegisterForm, LoginForm, AddMoney, StockPurchase
 from portfolio import db
@@ -66,7 +67,8 @@ def logout_page():
 
 @app.route('/logged-in-home')
 def logged_in_page():
-    return render_template('logged_in.html')
+    total_portfolio_value = sum(stock.value for stock in current_user.portfolioItems)
+    return render_template('logged_in.html', total_portfolio_value=total_portfolio_value)
 
 @app.route('/stocks')
 @app.route('/stocks/<int:page>')
@@ -84,8 +86,9 @@ def buy_stock(ticker):
     form.ticker.data = ticker
     stock_data = yf.Ticker(ticker)
     singlePicture(ticker)
-    stock_price = stock_data.info.get('regularMarketPrice') or stock_data.info.get('previousClose') or stock_data.info.get('open') or 'N/A'
-    
+    stock_price = stock_data.info.get('regularMarketPrice', stock_data.info.get('currentPrice')) or 'N/A'
+    name = stock_data.info['longName']
+
     if form.validate_on_submit():
         quantity = form.quantity.data
 
@@ -93,14 +96,33 @@ def buy_stock(ticker):
 
         if total_cost > current_user.budget:
             flash('Insufficient funds for this stock purchase. Please try again.', 'error')
-            return redirect(url_for('stocks_page'))
+        else:
+            ticker_exists = False
 
-        # Perform the stock purchase and update the user's portfolio
-        # stock_purchase = StocksPortfolio(user_id=current_user.id, ticker=ticker, quantity=quantity)
-        flash('Stock purchased successfully!', 'success')
-        return redirect(url_for('logged_in_page'))
-        
+            for stock in current_user.portfolioItems:
+                if stock.stock_symbol == ticker:
+                    ticker_exists = True
+                    break
+
+            if ticker_exists:
+                print('ticker in')
+                changePortfolio(stock_data, quantity, stock_price, total_cost)
+            else:
+                print('ticker out')
+                addToPortfolio(stock_data, quantity, stock_price, total_cost)
+
+            flash(f'{name} purchased successfully!', 'success')
+            return redirect(url_for('logged_in_page'))
+    
     return render_template('buy_stock.html', form=form, data=stock_data)
+
+@app.route('/search', methods=['GET'])
+def search_stock():
+    query = request.args.get('q', '')
+    search_results = yf.Tickers(query).tickers
+    filtered_results = [stock for stock in search_results if isinstance(stock, yf.Ticker) and stock.info.get('name') != 'N/A' and stock.info.get('symbol') != 'N/A' and stock.info.get('regularMarketPrice') != 'N/A']
+    
+    return render_template('search_results.html', query=query, results=filtered_results)
 
 @app.route('/add-money', methods=['GET', 'POST'])
 def add_money():
@@ -109,10 +131,8 @@ def add_money():
         current_user.budget += form.amount.data
         db.session.commit()
         
-        flash(f'Success! You are have added {form.amount.data}', category='success')
+        flash(f'Success! You have added {form.amount.data}$', category='success')
         return redirect(url_for('logged_in_page'))
-    else:
-        flash('Amount not valid. Please try again.', category='danger')
 
     return render_template('add_money.html', form=form)
 
@@ -159,10 +179,7 @@ def createPicture(tickerList):
         
         file_path = os.path.join(dir_path, f'static/{ticker}.png')
 
-        if os.path.exists(file_path):
-            continue
-        else:
-            fig.write_image(file_path)
+        fig.write_image(file_path)
             
 def get_all_stocks(start, end):
     with open('all_tickers.txt', 'r', encoding='utf-8') as f:
@@ -177,7 +194,7 @@ def get_all_stocks(start, end):
         
         stock_name = stock_data.info.get('longName', 'N/A')
         stock_symbol = stock_data.info.get('symbol', 'N/A')
-        stock_price = stock_data.info.get('regularMarketPrice') or stock_data.info.get('previousClose') or stock_data.info.get('open') or 'N/A'
+        stock_price = stock_data.info.get('regularMarketPrice', stock_data.info.get('currentPrice')) or 'N/A'
 
         if stock_name == 'N/A' or stock_price =='N/A': continue 
         
@@ -218,9 +235,28 @@ def singlePicture(ticker):
     
     fig.write_image(file_path)
 
+def addToPortfolio(stock_data, quantityToAdd, currPriceToAdd, valToAdd):
+    symbol = stock_data.info.get('symbol')
+
+    portfolio_to_add = StocksPortfolio(stock_symbol=symbol,
+                                quantity=quantityToAdd,
+                                current_price=currPriceToAdd,
+                                value=valToAdd,
+                                owner=current_user.id)
     
+    current_user.budget = current_user.budget - Decimal(valToAdd)
+    db.session.add(portfolio_to_add)
+    db.session.commit()
 
+def changePortfolio(stock_data, quantityToAdd, currPriceToAdd, valToAdd):
 
-
-
+    symbol = stock_data.info.get('symbol')
     
+    portfolio = StocksPortfolio.query.filter_by(stock_symbol=symbol, owner=current_user.id).first()
+
+
+    portfolio.quantity += quantityToAdd
+    portfolio.current_price = currPriceToAdd
+    portfolio.value += Decimal(valToAdd)
+    db.session.commit()
+

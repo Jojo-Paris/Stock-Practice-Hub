@@ -30,7 +30,6 @@ class StocksPortfolio(db.Model):
     id = db.Column(db.Integer(), primary_key=True)
     stock_symbol = db.Column(db.String(length=10), nullable=False)
     quantity = db.Column(db.Integer(), nullable=False)
-    purchase_price = db.Column(db.Numeric(10,2), nullable=False)
     current_price = db.Column(db.Numeric(10,2), nullable=False)
     value = db.Column(db.Numeric(10,2), nullable=False)
     owner = db.Column(db.Integer(), db.ForeignKey('user.id'))
