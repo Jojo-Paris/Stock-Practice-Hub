@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}
+    Stock Practice Hub
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <body class="text-center">
+        <div class="container">
+            <h1>Welcome {{current_user.username}}.</h1>
+            {% if current_user.budget == 0.0 %}
+                <h2 style="color: #152238;">Your current balance is {{current_user.budget}}$</h2>
+                <h2 style="color: #152238;">Add more money or sell some of your current stocks</h2>
+                <a href="{{ url_for('add_money') }}" class="btn btn-primary btn-lg">Add Money!</a>
+            {% else %}
+                <h1>You currently have {{current_user.budget}}$</h1>
+                <h2 style="color: #152238;">Buy more stocks below</h2>
+                <a href="{{ url_for('stocks_page') }}" class="btn btn-primary btn-lg" >Buy Stocks!</a>
+            {% endif %}
+
+            <br>
+            <br>
+            <br>
+
+            <h1>Current Stocks</h1>
+            <div class="stocks-list">
+            {% if current_user.portfolioItems %}
+                    {% for stock in current_user.portfolioItems %}
+                        <div class="stock-item">
+                            <h3 style="color: #152238;">{{ stock.stock_symbol }}</h3>
+                            <p style="color: #152238;">Quantity: {{ stock.quantity }}</p>
+                            <p style="color: #152238;">Last Bought Price: {{ stock.current_price }}</p>
+                            <p style="color: #152238;">Your value: {{ stock.value }}</p>
+                            <a href="{{ url_for('buy_stock', ticker=stock.stock_symbol) }}" class="btn btn-primary" >Buy More!</a>
+                        </div>
+                    {% endfor %}
+            {% else %}
+                <p style="color: #152238;">You currently do not own any stocks.</p>
+            {% endif %}
+
+            
+        </div>
+
+        <h1>Total Portfolio Value</h1>
+        <h1>{{ total_portfolio_value }}</h1> 
+
+    </body>
+    
+</div>
+    <style>
+        .stocks-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .stock-item {
+            width: 200px;
+            margin: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+        }
+    </style>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+          document.querySelector(".fade-in").classList.add("fade-in");
+        });
+        
+    </script>
+{% endblock %}

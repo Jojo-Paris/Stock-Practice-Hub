@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% block title %}
+    Stock Practice Hub
+{% endblock %}
+
+{% block content %}
+<div class="container fade-in">
+    <body class="text-center">
+        <div class="container">
+            <h1>You currently have {{current_user.budget}}$</h1>
+            <h2 style="color: #152238;">Buy more stocks below</h2>
+            <br>
+            <br>
+            <br>
+
+            <form action="/search" method="GET">
+                <label for="q" style="color: #152238;">Search for a stock:</label>
+                <input type="text" id="q" name="q" placeholder="Enter a stock symbol...">
+                <button type="submit">Search</button>
+            </form>
+
+            <br>
+            <br>
+
+            <h1>Stock Market</h1>
+
+            <div class="row">
+                {% for stock in stocks %}
+                    <div class="col-sm-6">
+                        <div class="card">
+                            <h3 class="card-header" style="color: #152238;">{{ stock.name }}</h3>
+                            <div class="card-body">
+                                <p class="card-text">Symbol: {{ stock.symbol }}</p>
+                                <p class="card-text">Price: {{ stock.price }}</p>
+                                <a href="{{ url_for('buy_stock', ticker=stock.symbol) }}" class="btn btn-primary">Buy Stock</a>
+                            </div>
+                            <style>
+                                .card {
+                                    width: 20rem;
+                                    height: 19rem;
+                                    margin: 0 auto;
+                                }
+                            </style>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+
+            <br>
+            <br>
+
+            {% if current_page > 1 %}
+                <a href="{{ url_for('stocks_page', page=current_page-1) }}" class="btn btn-primary">Previous  </a>
+            {% endif %}
+
+            <a href="{{ url_for('stocks_page', page=current_page+1) }}" class="btn btn-primary">Next</a>
+        </div>
+    </body>
+</div>
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+          document.querySelector(".fade-in").classList.add("fade-in");
+        });
+        
+    </script>
+{% endblock %}

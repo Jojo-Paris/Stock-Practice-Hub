@@ -36,7 +36,6 @@
 </ul>
 
 <h2>Screenshots</h2>
-<!-- Include some screenshots of the application here -->
 
 <h2>Contributions</h2>
 <p>Contributions to Stock Practice Hub are welcome! If you find any bugs or have suggestions for improvements, feel free to create an issue or submit a pull request.</p>

@@ -5,6 +5,7 @@
 
 {% block content %}
     <div class="container fade-in">
+    
         <div class="container-fluid">
             
                 <img src="https://img.freepik.com/free-vector/gradient-stock-market-concept_23-2149166910.jpg?w=2000" alt="Full-width image" class="full-width-image">
@@ -22,14 +23,96 @@
         <br>
         <br>
         <br>
-        <br>
-        <br>
-        <br>
 
         <div class="container">
             <h1>Welcome to Stock Practice Hub</h1>
             <p>Practice trading stocks and improve your skills using fake money</p>
-            <a href="#" class="btn btn-primary btn-lg">Get Started</a>
+            {% if current_user.is_authenticated %}
+            <h4 style="color: #152238;">Click the welcome tab at the top to start!</h4>
+            {% else %}
+            <a href="{{ url_for('register_page') }}" class="btn btn-primary btn-lg">Sign Up</a>
+            {% endif %}
+        
+            <br>
+            <br>
+            <br>
+            <div class="horizontal-line"></div>
+
+            {% for ticker in tickers %}
+
+                <div class="column">
+                    <h1>{{ ticker }}</h1>
+                    <img src="{{ url_for('static', filename=ticker ~ '.png') }}" alt="Graph" style="width:90%" href="{{ url_for('register_page') }}">
+                </div>
+                <br>
+                <br>
+            {% endfor %}
+            
+        
+        <section id="testimonials">
+            <div class="testimonial-heading">
+                <h1>Client Reviews</h1>
+            </div>
+
+            <div class="testimonial-box-container">
+                <div class="testimonial-box">
+                    <div class="box-top">
+                        <div class="profile">
+                            <div class="name-user">
+                                <strong>Alex Treyford</strong>
+                                <span>@Alex-Treyford</span>
+                            </div>
+                        </div>
+                        <div class="reviews">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="far fa-star"></i>
+                        </div>
+                    </div>
+
+                    <div class="client-comment">
+                        <p>This website was awesome. I loved how I was able to become a professional stock broker using fake Money. Totally recommend.</p>
+                    </div>
+
+                </div>
+
+                <div class="testimonial-box">
+                    <div class="box-top">
+                        <div class="profile">
+                            <div class="name-user">
+                                <strong>Ulisses Sanchez</strong>
+                                <span>@Ulisses-Sanchez</span>
+                            </div>
+                        </div>
+                        <div class="reviews">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+
+                    <div class="client-comment">
+                        <p>Absolutely incredible! This website helped me gain a deep understanding of stock trading in no time. Highly recommended for beginners and seasoned investors alike</p>
+                    </div>
+
+                </div>
+
+               
+            </div>
+
+
+
+        </section>
+
+        <br>
+        
+      
+        
+        <div class="black-section">
         </div>
 
     </div>
@@ -39,4 +122,130 @@
           document.querySelector(".fade-in").classList.add("fade-in");
         });
     </script>
+    <style>
+
+        .testimonial-heading span{
+            font-size: 1.3rem;
+            color: #252525;
+            margin-bottom: 10px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .testimonial-heading h1{
+            background-color: #152238;
+            padding: 10px;
+            color: white;
+            width: 100vw;
+            margin-left: -50vw;
+            position: relative;
+            left: 50%;
+        }
+
+        .testimonial-box-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 100px;
+        }
+
+        .testimonial-box {
+            width: 350px;
+            box-shadow: 20px 20px 30px rgba(0, 0, 0, 0.1);
+            background-color: #152238;
+            padding: 30px;
+            margin-bottom: 20px;
+            cursor: pointer;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+        }
+
+        .name-user{
+            display: flex;
+            flex-direction: column;
+        }
+
+        .name-user strong{
+            color: #ffffff;
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .name-user span{
+            color: 979797;
+            font-size: 0.8rem;
+        }
+
+        .reviews{
+            color: #ffffff;
+        }
+
+        .box-top{
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .client-comment p{
+            font-size: 0.9rem;
+            color: #ffffff
+        }
+
+        .testimonial-box:hover{
+            transform: translateY(-10px);
+            transition: all ease 0.3s;
+        }
+        
+        .column:hover{
+            transform: translateY(-10px);
+            transition: all ease 0.3s;
+            cursor: pointer;
+        }
+
+        @media(max-width:1060px){
+            .testimonial-box{
+                width: 45%;
+                padding: 10px;
+            }
+        }
+
+        @media(max-width:790px){
+            .testimonial-box{
+                width:100%;
+            }
+
+            .testimonial-heading h1{
+                font-size: 1.4rem;
+            }
+        }
+
+        @media(max-width:340px){
+            .box-top{
+                flex-wrap: wrap;
+                margin-bottom: 10px;
+            }
+
+            .reviews{
+                margin-top: 10px;
+            }
+        }
+
+        ::selection{
+            color: #ffffff;
+            background-color: #ffffff;
+        }
+
+        .horizontal-line {
+            position: absolute;
+            top: 17.7%;
+            left: 0;
+            right: 0;
+            border-top: 3px solid #152238;
+        }
+
+    </style>
 {% endblock %}

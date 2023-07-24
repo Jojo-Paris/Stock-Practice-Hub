@@ -1,0 +1,59 @@
+{% extends 'base.html' %}
+{% block title %}
+    Stock Practice Hub
+{% endblock %}
+
+{% block content %}
+<br>
+
+<div class="container fade-in">
+    <div style="text-align: left;">
+        <a href="{{ url_for('stocks_page') }}" class="nav-link" style="color: #152238; font-weight: bold; display: block;">
+            <i class="fas fa-arrow-left" style="font-size: 24px; float: left; margin-right: 20px;"></i>
+        </a>
+    </div>
+    <body class="text-center">
+        <div class="container">
+            <h1>You currently have {{current_user.budget}}$</h1>
+
+            <br>
+            <br>
+
+            <h1>{{ data.info.get('longName') }}</h1>
+            
+            <div class="column">
+                <img src="{{ url_for('static', filename= data.info.get('symbol') ~ '.png') }}" alt="Graph" style="width:90%">
+                <h1>Current Price: {{data.info.get('previousClose')}}$</h1>
+            </div>
+            
+            <form method="POST" onsubmit="return confirmPurchase({{ data.info.get('previousClose') }}, {{ current_user.budget }})">
+                {{ form.hidden_tag() }}
+                <div style="color: #152238;">
+                    {{ form.quantity.label }}
+                </div>
+                {{ form.quantity(class="form-control", placeholder="Enter A Quantity") }}
+                {{form.buy(class="btn btn-lg btn-block btn-primary") }}
+            </form>
+        </div>
+    </body>
+</div>
+
+    <script>
+        window.addEventListener("DOMContentLoaded", function() {
+          document.querySelector(".fade-in").classList.add("fade-in");
+        });
+
+        function confirmPurchase(stockPrice, userBudget) {
+        var quantity = parseInt(document.getElementById("quantity").value);
+        var totalCost = quantity * stockPrice;
+        var remainingBudget = userBudget - totalCost;
+
+        var confirmationMessage = "Are you sure you want to purchase " + quantity + " shares?\n\n";
+        confirmationMessage += "Total cost: $" + totalCost.toFixed(2) + "\n";
+        confirmationMessage += "Remaining budget: $" + remainingBudget.toFixed(2);
+
+        return confirm(confirmationMessage);
+        };
+        
+    </script>
+{% endblock %}
