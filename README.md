@@ -36,7 +36,26 @@
 </ul>
 
 <h2>Screenshots</h2>
+<br>
+
 <!-- Include some screenshots of the application here -->
+
+| Home Page (Not Logged In)                                 | Register For An Account                                 |
+|----------------------------------------------|----------------------------------------------|
+| ![Screenshot 1](https://github.com/Jojo-Paris/Stock-Practice-Hub/assets/73213153/ef5f9b21-57c2-4d15-8b02-4ed110c931f5) | ![Screenshot 2](https://github.com/Jojo-Paris/Stock-Practice-Hub/assets/73213153/5957049c-75ff-4259-bb86-c1ca194cda28) |
+
+| Login To An Existing Account                                 | User Stock Portfolio                                |
+|----------------------------------------------|----------------------------------------------|
+| ![Screenshot 3](https://github.com/Jojo-Paris/Stock-Practice-Hub/assets/73213153/44af3791-f69d-42c3-88b1-1b66e02680b2) | ![Screenshot 4](https://github.com/Jojo-Paris/Stock-Practice-Hub/assets/73213153/6e7f7b8a-541b-485f-85b2-196a9a38343f) |
+
+| Stock Market                                 | Buying A Stock                                 |
+|----------------------------------------------|----------------------------------------------|
+| ![Screenshot 5](https://github.com/Jojo-Paris/Stock-Practice-Hub/assets/73213153/e328f69c-18bf-4746-83bf-eb6ecfcff6d7) | ![Screenshot 6](https://github.com/Jojo-Paris/Stock-Practice-Hub/assets/73213153/3e710ce7-2758-4a4f-8bb4-9ec710ef5726) |
+
+| Adding More Money To Account                                 |
+|----------------------------------------------|
+| ![Screenshot 7](https://github.com/Jojo-Paris/Stock-Practice-Hub/assets/73213153/de90db0d-4433-49d7-b457-3db4c9d915a9) |
+
 
 <h2>Contributions</h2>
 <p>Contributions to Stock Practice Hub are welcome! If you find any bugs or have suggestions for improvements, feel free to create an issue or submit a pull request.</p>
